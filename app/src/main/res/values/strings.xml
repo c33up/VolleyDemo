@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">volleyTest</string>
+    <string name="config_logcat_tag">volley</string>
 </resources>
