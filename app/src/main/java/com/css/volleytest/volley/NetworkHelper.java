@@ -21,18 +21,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-public class NetworkUtil {
+public class NetworkHelper {
 
-    private static NetworkUtil instance;
+    private static NetworkHelper instance;
     private static final int CONNECT_TIMEOUT=5*1000;//连接超时
     private static final int CONNECT_TIME=0;//连接次数
 
     //单例获取工具类
-    public static NetworkUtil getInstance() {
+    public static NetworkHelper getInstance() {
         if (instance == null) {
-            synchronized (NetworkUtil.class) {
+            synchronized (NetworkHelper.class) {
                 if (instance == null) {
-                    instance = new NetworkUtil();
+                    instance = new NetworkHelper();
                 }
             }
         }
@@ -121,6 +121,46 @@ public class NetworkUtil {
         ));
         mRequestQueue.add(request);
     }
+
+
+    public <T> void doHttpGet(String url, Map<String, String> map, String tag,
+                              final OnCallBackListener<T> callBackListener,Class<T> clazz) {
+
+        String getUrl="";
+        if (map == null) {
+            getUrl = url;
+        } else {
+            StringBuffer sb = new StringBuffer(url);
+            sb.append("?");
+            Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                String k = (String) entry.getKey();
+                Object v = entry.getValue();
+                sb.append(k + "=" + v + "&");
+            }
+            getUrl = sb.toString().substring(0, sb.toString().length() - 1);
+        }
+
+        VolleyRequest request = new VolleyRequest(Request.Method.GET, getUrl, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (callBackListener!=null){
+                    callBackListener.onFail(volleyError.getMessage());
+                }
+            }
+        }, new Response.Listener<T>() {
+            @Override
+            public void onResponse(T s) {
+                if (callBackListener!=null){
+                    callBackListener.onSuccess(s);
+                }
+            }
+        },clazz);
+        request.setTag(tag);
+        mRequestQueue.add(request);
+    }
+
 
     private void showErrorMessage(Activity context, VolleyError error) {
         if (error instanceof NoConnectionError || error instanceof NetworkError) {

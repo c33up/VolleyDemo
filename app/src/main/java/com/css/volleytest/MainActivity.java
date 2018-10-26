@@ -7,11 +7,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.css.volleytest.volley.NetworkUtil;
+import com.css.volleytest.bean.BaseBean;
+import com.css.volleytest.volley.NetworkHelper;
 import com.css.volleytest.volley.OnCallBackListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText editText;
     private Button button;
     private TextView textView;
 
@@ -19,9 +22,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText=findViewById(R.id.edit_url);
-        button=findViewById(R.id.btn_get);
+
         textView=findViewById(R.id.tv_content);
+
+        button=findViewById(R.id.btn_get);
         button.setOnClickListener(this);
     }
 
@@ -35,20 +39,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getHttp(){
-        String url=editText.getText().toString();
-        NetworkUtil.getInstance().get(MainActivity.this,
-                url,
-                null,
-                new OnCallBackListener() {
-            @Override
-            public void onSuccess(Object result) {
-                textView.setText(result.toString());
-            }
+        Map<String,String> map=new HashMap<>();
+        map.put("citykey","101010100");
+        NetworkHelper.getInstance().doHttpGet(
+                "http://wthrcdn.etouch.cn/weather_mini",
+                map,"get",
+                new OnCallBackListener<BaseBean>() {
+                    @Override
+                    public void onSuccess(BaseBean result) {
 
-            @Override
-            public void onFail(String errorMsg) {
+                        textView.setText("status:"+result.getStatus());
+                    }
 
-            }
-        });
+                    @Override
+                    public void onFail(String errorMsg) {
+
+                    }
+                },BaseBean.class);
+
+//        NetworkHelper.getInstance().get(MainActivity.this,
+//                url,
+//                null,
+//                new OnCallBackListener() {
+//            @Override
+//            public void onSuccess(Object result) {
+//                textView.setText(result.toString());
+//            }
+//
+//            @Override
+//            public void onFail(String errorMsg) {
+//
+//            }
+//        });
     }
 }
