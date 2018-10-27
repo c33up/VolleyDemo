@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getHttp(){
-        Map<String,String> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>();
         map.put("citykey","101010100");
         NetworkHelper.getInstance().doHttpGet(
                 "http://wthrcdn.etouch.cn/weather_mini",

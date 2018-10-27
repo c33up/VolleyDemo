@@ -123,7 +123,8 @@ public class NetworkHelper {
     }
 
 
-    public <T> void doHttpGet(String url, Map<String, String> map, String tag,
+    @SuppressWarnings("unchecked")
+    public <T> void doHttpGet(String url, Map<String, Object> map, String tag,
                               final OnCallBackListener<T> callBackListener,Class<T> clazz) {
 
         String getUrl="";
@@ -132,7 +133,7 @@ public class NetworkHelper {
         } else {
             StringBuffer sb = new StringBuffer(url);
             sb.append("?");
-            Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
                 String k = (String) entry.getKey();

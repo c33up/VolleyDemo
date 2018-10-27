@@ -31,6 +31,9 @@ public class VolleyRequest<T> extends Request<T> {
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        //NetworkResponse 这个类中包含了服务器返回的结果，返回头等。其中的 response.data 这个是一个 byte 数组
+        //response.headers 这个是请求头数据
+        // HttpHeaderParser.parseCharset(response.headers) 这个就是服务器返回的编码方式
         String json;
         try {
                 json=new String(response.data, "UTF-8");
